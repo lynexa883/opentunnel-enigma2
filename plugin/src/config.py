@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 
+"""
+OpenTunnel Configuration
+"""
+
 from Components.config import (
     config,
     ConfigSubsection,
@@ -9,10 +13,9 @@ from Components.config import (
     ConfigYesNo
 )
 
-# Create OpenTunnel configuration section
 config.plugins.opentunnel = ConfigSubsection()
 
-# SSH Server Address
+# SSH Server
 config.plugins.opentunnel.server = ConfigText(
     default="",
     fixed_size=False
@@ -35,7 +38,7 @@ config.plugins.opentunnel.password = ConfigPassword(
     default=""
 )
 
-# Auto Connect on Enigma2 Startup
+# Connect automatically after Enigma2 starts
 config.plugins.opentunnel.autoconnect = ConfigYesNo(
     default=False
 )
