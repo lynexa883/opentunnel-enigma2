@@ -1,39 +1,26 @@
 # -*- coding: utf-8 -*-
 
 from Screens.Screen import Screen
-
+from Components.ConfigList import ConfigListScreen
 from Components.ActionMap import ActionMap
-from Components.Label import Label
+from Components.config import config, getConfigListEntry
 
 from .version import VERSION
 from .logger import log
 
 
-class OpenTunnelScreen(Screen):
+class OpenTunnelScreen(Screen, ConfigListScreen):
 
     skin = """
     <screen name="OpenTunnelScreen"
         position="center,center"
-        size="600,400"
+        size="750,520"
         title="OpenTunnel">
 
-        <widget name="title"
+        <widget name="config"
             position="20,20"
-            size="560,40"
-            font="Regular;28"
-            halign="center"/>
-
-        <widget name="info"
-            position="20,80"
-            size="560,40"
-            font="Regular;22"
-            halign="center"/>
-
-        <widget name="status"
-            position="20,340"
-            size="560,30"
-            font="Regular;20"
-            halign="center"/>
+            size="710,420"
+            scrollbarMode="showOnDemand"/>
 
     </screen>
     """
@@ -42,24 +29,31 @@ class OpenTunnelScreen(Screen):
 
         Screen.__init__(self, session)
 
-        log("Main screen created")
+        self.setTitle("OpenTunnel v%s" % VERSION)
 
-        self["title"] = Label("OpenTunnel v%s" % VERSION)
+        self.list = [
 
-        self["info"] = Label("SSH Tunnel Manager")
+            getConfigListEntry(
+                "SSH Server",
+                config.plugins.opentunnel.server
+            ),
 
-        self["status"] = Label("Status : Disconnected")
+            getConfigListEntry(
+                "SSH Port",
+                config.plugins.opentunnel.port
+            ),
 
-        self["actions"] = ActionMap(
-            ["OkCancelActions"],
-            {
-                "cancel": self.close
-            },
-            -1
-        )
+            getConfigListEntry(
+                "Username",
+                config.plugins.opentunnel.username
+            ),
 
-    def close(self):
+            getConfigListEntry(
+                "Password",
+                config.plugins.opentunnel.password
+            ),
 
-        log("Plugin Closed")
-
-        Screen.close(self)
+            getConfigListEntry(
+                "Auto Connect",
+                config.plugins.opentunnel.autoconnect
+           
