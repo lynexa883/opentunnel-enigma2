@@ -5,58 +5,16 @@ from Components.ConfigList import ConfigListScreen
 from Components.ActionMap import ActionMap
 from Components.config import getConfigListEntry, config
 from Components.Sources.StaticText import StaticText
+from Components.Label import Label
 
+from .skin import MAIN_SKIN
 from .version import VERSION
 from .logger import log
 
 
 class OpenTunnelScreen(Screen, ConfigListScreen):
 
-    skin = """
-    <screen name="OpenTunnelScreen"
-        position="center,center"
-        size="620,440"
-        title="OpenTunnel">
-
-        <widget name="config"
-            position="10,10"
-            size="600,340"
-            scrollbarMode="showOnDemand"/>
-
-        <widget source="key_red"
-            render="Label"
-            position="20,390"
-            size="120,30"
-            font="Regular;22"
-            halign="center"
-            valign="center"/>
-
-        <widget source="key_green"
-            render="Label"
-            position="170,390"
-            size="120,30"
-            font="Regular;22"
-            halign="center"
-            valign="center"/>
-
-        <widget source="key_yellow"
-            render="Label"
-            position="320,390"
-            size="120,30"
-            font="Regular;22"
-            halign="center"
-            valign="center"/>
-
-        <widget source="key_blue"
-            render="Label"
-            position="470,390"
-            size="120,30"
-            font="Regular;22"
-            halign="center"
-            valign="center"/>
-
-    </screen>
-    """
+    skin = MAIN_SKIN
 
     def __init__(self, session):
 
@@ -64,11 +22,16 @@ class OpenTunnelScreen(Screen, ConfigListScreen):
 
         self.setTitle("OpenTunnel v%s" % VERSION)
 
+        # Color Buttons
         self["key_red"] = StaticText("Cancel")
         self["key_green"] = StaticText("Save")
         self["key_yellow"] = StaticText("Test")
         self["key_blue"] = StaticText("Connect")
 
+        # Status Label
+        self["status"] = Label("Status : Disconnected")
+
+        # Configuration List
         self.list = [
 
             getConfigListEntry(
@@ -115,10 +78,15 @@ class OpenTunnelScreen(Screen, ConfigListScreen):
 
         log("Main screen opened")
 
+    def setStatus(self, text):
+        self["status"].setText("Status : %s" % text)
+
     def save(self):
 
         for item in self["config"].list:
             item[1].save()
+
+        self.setStatus("Configuration Saved")
 
         log("Configuration saved")
 
@@ -129,14 +97,20 @@ class OpenTunnelScreen(Screen, ConfigListScreen):
         for item in self["config"].list:
             item[1].cancel()
 
+        self.setStatus("Canceled")
+
         log("Configuration canceled")
 
         self.close()
 
     def testConnection(self):
 
+        self.setStatus("Testing Connection...")
+
         log("Test connection requested")
 
     def connectTunnel(self):
+
+        self.setStatus("Connecting...")
 
         log("Connect tunnel requested")
