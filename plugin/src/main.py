@@ -22,16 +22,27 @@ class OpenTunnelScreen(Screen, ConfigListScreen):
 
         self.setTitle("OpenTunnel v%s" % VERSION)
 
+        #
         # Color Buttons
-        self["key_red"] = StaticText("Cancel")
-        self["key_green"] = StaticText("Save")
-        self["key_yellow"] = StaticText("Test")
-        self["key_blue"] = StaticText("Connect")
+        #
+        self["key_red"] = StaticText(_("Cancel") if "_" in globals() else "Cancel")
+        self["key_green"] = StaticText(_("Save") if "_" in globals() else "Save")
+        self["key_yellow"] = StaticText(_("Test") if "_" in globals() else "Test")
+        self["key_blue"] = StaticText(_("Connect") if "_" in globals() else "Connect")
 
-        # Status Label
-        self["status"] = Label("Status : Disconnected")
+        #
+        # Status
+        #
+        self["status"] = Label("Disconnected")
 
-        # Configuration List
+        #
+        # Version
+        #
+        self["version"] = Label("Version %s" % VERSION)
+
+        #
+        # Config List
+        #
         self.list = [
 
             getConfigListEntry(
@@ -63,6 +74,9 @@ class OpenTunnelScreen(Screen, ConfigListScreen):
 
         ConfigListScreen.__init__(self, self.list)
 
+        #
+        # Actions
+        #
         self["actions"] = ActionMap(
             ["SetupActions", "ColorActions"],
             {
@@ -76,10 +90,16 @@ class OpenTunnelScreen(Screen, ConfigListScreen):
             -2
         )
 
-        log("Main screen opened")
+        log("OpenTunnel main screen loaded")
+
+    # ------------------------------------------------
 
     def setStatus(self, text):
-        self["status"].setText("Status : %s" % text)
+
+        self["status"].setText(text)
+        log("Status: %s" % text)
+
+    # ------------------------------------------------
 
     def save(self):
 
@@ -88,9 +108,9 @@ class OpenTunnelScreen(Screen, ConfigListScreen):
 
         self.setStatus("Configuration Saved")
 
-        log("Configuration saved")
-
         self.close()
+
+    # ------------------------------------------------
 
     def cancel(self):
 
@@ -99,18 +119,20 @@ class OpenTunnelScreen(Screen, ConfigListScreen):
 
         self.setStatus("Canceled")
 
-        log("Configuration canceled")
-
         self.close()
+
+    # ------------------------------------------------
 
     def testConnection(self):
 
-        self.setStatus("Testing Connection...")
+        self.setStatus("Testing SSH...")
 
-        log("Test connection requested")
+        log("Test button pressed")
+
+    # ------------------------------------------------
 
     def connectTunnel(self):
 
         self.setStatus("Connecting...")
 
-        log("Connect tunnel requested")
+        log("Connect button pressed")
